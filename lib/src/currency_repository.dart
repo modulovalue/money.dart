@@ -20,7 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-part of money;
+import 'package:money/money.dart';
 
 /// Interface for repository of currencies.
 ///

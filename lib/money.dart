@@ -22,6 +22,6 @@
 
 library money;
 
-part "src/currency.dart";
-part "src/currency_repository.dart";
-part "src/money.dart";
+export "src/currency.dart";
+export "src/currency_repository.dart";
+export "src/money.dart";
