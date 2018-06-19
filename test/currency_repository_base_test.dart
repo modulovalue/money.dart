@@ -20,10 +20,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import "package:test/test.dart";
-
 import "package:money/money.dart"
     show CodeCurrency, Currency, CurrencyRepository, CurrencyRepositoryBase, UnknownCurrencyException;
+import "package:test/test.dart";
 
 final code = "USD";
 final anotherCode = "RUB";
@@ -35,47 +34,47 @@ final notInRepoCode = "EUR";
 final notInRepoCurrency = new CodeCurrency(code: "EUR");
 
 class TestCurrencyRepository extends CurrencyRepositoryBase {
-  @override
-  List<Currency> allCurrencies() {
-    return <Currency>[
-      currency,
-      anotherCurrency
-    ];
-  }
+    @override
+    List<Currency> allCurrencies() {
+        return <Currency>[
+            currency,
+            anotherCurrency
+        ];
+    }
 }
 
 void main() {
-  group("CurrencyRepositoryBase", () {
-    CurrencyRepositoryBase repository;
+    group("CurrencyRepositoryBase", () {
+        CurrencyRepositoryBase repository;
 
-    setUp(() {
-      repository = new TestCurrencyRepository();
-    });
+        setUp(() {
+            repository = new TestCurrencyRepository();
+        });
 
-    test("is a currency repository", () {
-      expect(repository, const isInstanceOf<CurrencyRepository>());
-    });
+        test("is a currency repository", () {
+            expect(repository, const isInstanceOf<CurrencyRepository>());
+        });
 
-    test("fiends currency by its code", () {
-      expect(repository.currencyOf(code), equals(currency));
-      expect(repository.currencyOf(anotherCode), equals(anotherCurrency));
-    });
+        test("fiends currency by its code", () {
+            expect(repository.currencyOf(code), equals(currency));
+            expect(repository.currencyOf(anotherCode), equals(anotherCurrency));
+        });
 
-    test("throws an exception when currency cannot be found by a given code", () {
-      expect(() => repository.currencyOf(notInRepoCode),
-          throwsA(const isInstanceOf<UnknownCurrencyException>()));
-    });
+        test("throws an exception when currency cannot be found by a given code", () {
+            expect(() => repository.currencyOf(notInRepoCode),
+                throwsA(const isInstanceOf<UnknownCurrencyException>()));
+        });
 
-    test("checks whether a currency is available in this repository", () {
-      expect(repository.containsCurrency(currency), isTrue);
-      expect(repository.containsCurrency(anotherCurrency), isTrue);
-      expect(repository.containsCurrency(notInRepoCurrency), isFalse);
-    });
+        test("checks whether a currency is available in this repository", () {
+            expect(repository.containsCurrency(currency), isTrue);
+            expect(repository.containsCurrency(anotherCurrency), isTrue);
+            expect(repository.containsCurrency(notInRepoCurrency), isFalse);
+        });
 
-    test("checks whether a currency with a given code is in this repository", () {
-      expect(repository.containsCurrencyOf(code), isTrue);
-      expect(repository.containsCurrencyOf(anotherCode), isTrue);
-      expect(repository.containsCurrencyOf(notInRepoCode), isFalse);
+        test("checks whether a currency with a given code is in this repository", () {
+            expect(repository.containsCurrencyOf(code), isTrue);
+            expect(repository.containsCurrencyOf(anotherCode), isTrue);
+            expect(repository.containsCurrencyOf(notInRepoCode), isFalse);
+        });
     });
-  });
 }

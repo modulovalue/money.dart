@@ -22,10 +22,9 @@
 
 
 import "package:mockito/mockito.dart";
-import "package:test/test.dart";
-
 import "package:money/money.dart"
     show AggregateCurrencyRepository, CodeCurrency, Currency, CurrencyRepository, UnknownCurrencyException;
+import "package:test/test.dart";
 
 class MockCurrencyRepository extends Mock implements CurrencyRepository {}
 
@@ -36,87 +35,86 @@ final currency = new CodeCurrency(code: code);
 final anotherCurrency = new CodeCurrency(code: anotherCode);
 
 void main() {
-  group("AggregateCurrencyRepository", () {
+    group("AggregateCurrencyRepository", () {
+        MockCurrencyRepository repository;
+        MockCurrencyRepository anotherRepository;
 
-    MockCurrencyRepository repository;
-    MockCurrencyRepository anotherRepository;
+        AggregateCurrencyRepository aggregate;
 
-    AggregateCurrencyRepository aggregate;
+        setUp(() {
+            repository = new MockCurrencyRepository();
+            anotherRepository = new MockCurrencyRepository();
+            aggregate = new AggregateCurrencyRepository([
+                repository,
+                anotherRepository
+            ]);
+        });
 
-    setUp(() {
-      repository = new MockCurrencyRepository();
-      anotherRepository = new MockCurrencyRepository();
-      aggregate = new AggregateCurrencyRepository([
-        repository,
-        anotherRepository
-      ]);
+        test("is a currency repository", () {
+            expect(aggregate, const isInstanceOf<CurrencyRepository>());
+        });
+
+        test("throws an error when list of repositories is empty during instantiation", () {
+            expect(() => new AggregateCurrencyRepository([]), throwsArgumentError);
+        });
+
+        test("provides list of all currencies in the aggregatet repositories", () {
+            when(repository.allCurrencies()).thenReturn(<Currency>[currency]);
+            when(anotherRepository.allCurrencies()).thenReturn(<Currency>[anotherCurrency]);
+
+            expect(aggregate.allCurrencies(), equals(<Currency>[currency, anotherCurrency]));
+        });
+
+        test("finds currency by code", () {
+            when(repository.containsCurrencyOf(code)).thenReturn(true);
+            when(repository.containsCurrencyOf(anotherCode)).thenReturn(false);
+            when(repository.currencyOf(code)).thenReturn(currency);
+            when(repository.currencyOf(anotherCode)).thenThrow(new UnknownCurrencyException(anotherCode));
+
+            when(anotherRepository.containsCurrencyOf(code)).thenReturn(false);
+            when(anotherRepository.containsCurrencyOf(anotherCode)).thenReturn(true);
+            when(anotherRepository.currencyOf(code)).thenThrow(new UnknownCurrencyException(code));
+            when(anotherRepository.currencyOf(anotherCode)).thenReturn(anotherCurrency);
+
+            expect(aggregate.currencyOf(code), equals(currency));
+            expect(aggregate.currencyOf(anotherCode), equals(anotherCurrency));
+        });
+
+        test("throws an exception when currency with some code cannot be found", () {
+            when(repository.containsCurrencyOf(code)).thenReturn(false);
+            when(anotherRepository.containsCurrencyOf(code)).thenReturn(false);
+            when(repository.currencyOf(code)).thenThrow(new UnknownCurrencyException(code));
+            when(anotherRepository.currencyOf(code)).thenThrow(new UnknownCurrencyException(code));
+
+            expect(() => aggregate.currencyOf(code), throwsA(const isInstanceOf<UnknownCurrencyException>()));
+        });
+
+        test("checks that any of repositories contains currency", () {
+            when(repository.containsCurrency(currency)).thenReturn(true);
+            when(anotherRepository.containsCurrency(currency)).thenReturn(false);
+            expect(aggregate.containsCurrency(currency), isTrue);
+
+            when(repository.containsCurrency(currency)).thenReturn(false);
+            when(anotherRepository.containsCurrency(currency)).thenReturn(true);
+            expect(aggregate.containsCurrency(currency), isTrue);
+
+            when(repository.containsCurrency(currency)).thenReturn(false);
+            when(anotherRepository.containsCurrency(currency)).thenReturn(false);
+            expect(aggregate.containsCurrency(currency), isFalse);
+        });
+
+        test("checks that any of repositories contains currency with a given code", () {
+            when(repository.containsCurrencyOf(code)).thenReturn(true);
+            when(anotherRepository.containsCurrencyOf(code)).thenReturn(false);
+            expect(aggregate.containsCurrencyOf(code), isTrue);
+
+            when(repository.containsCurrencyOf(code)).thenReturn(false);
+            when(anotherRepository.containsCurrencyOf(code)).thenReturn(true);
+            expect(aggregate.containsCurrencyOf(code), isTrue);
+
+            when(repository.containsCurrencyOf(code)).thenReturn(false);
+            when(anotherRepository.containsCurrencyOf(code)).thenReturn(false);
+            expect(aggregate.containsCurrencyOf(code), isFalse);
+        });
     });
-
-    test("is a currency repository", () {
-      expect(aggregate, const isInstanceOf<CurrencyRepository>());
-    });
-
-    test("throws an error when list of repositories is empty during instantiation", () {
-      expect(() => new AggregateCurrencyRepository([]), throwsArgumentError);
-    });
-
-    test("provides list of all currencies in the aggregatet repositories", () {
-      when(repository.allCurrencies()).thenReturn(<Currency>[currency]);
-      when(anotherRepository.allCurrencies()).thenReturn(<Currency>[anotherCurrency]);
-
-      expect(aggregate.allCurrencies(), equals(<Currency>[currency, anotherCurrency]));
-    });
-
-    test("finds currency by code", () {
-      when(repository.containsCurrencyOf(code)).thenReturn(true);
-      when(repository.containsCurrencyOf(anotherCode)).thenReturn(false);
-      when(repository.currencyOf(code)).thenReturn(currency);
-      when(repository.currencyOf(anotherCode)).thenThrow(new UnknownCurrencyException(anotherCode));
-
-      when(anotherRepository.containsCurrencyOf(code)).thenReturn(false);
-      when(anotherRepository.containsCurrencyOf(anotherCode)).thenReturn(true);
-      when(anotherRepository.currencyOf(code)).thenThrow(new UnknownCurrencyException(code));
-      when(anotherRepository.currencyOf(anotherCode)).thenReturn(anotherCurrency);
-
-      expect(aggregate.currencyOf(code), equals(currency));
-      expect(aggregate.currencyOf(anotherCode), equals(anotherCurrency));
-    });
-
-    test("throws an exception when currency with some code cannot be found", () {
-      when(repository.containsCurrencyOf(code)).thenReturn(false);
-      when(anotherRepository.containsCurrencyOf(code)).thenReturn(false);
-      when(repository.currencyOf(code)).thenThrow(new UnknownCurrencyException(code));
-      when(anotherRepository.currencyOf(code)).thenThrow(new UnknownCurrencyException(code));
-
-      expect(() => aggregate.currencyOf(code), throwsA(const isInstanceOf<UnknownCurrencyException>()));
-    });
-
-    test("checks that any of repositories contains currency", () {
-      when(repository.containsCurrency(currency)).thenReturn(true);
-      when(anotherRepository.containsCurrency(currency)).thenReturn(false);
-      expect(aggregate.containsCurrency(currency), isTrue);
-
-      when(repository.containsCurrency(currency)).thenReturn(false);
-      when(anotherRepository.containsCurrency(currency)).thenReturn(true);
-      expect(aggregate.containsCurrency(currency), isTrue);
-
-      when(repository.containsCurrency(currency)).thenReturn(false);
-      when(anotherRepository.containsCurrency(currency)).thenReturn(false);
-      expect(aggregate.containsCurrency(currency), isFalse);
-    });
-
-    test("checks that any of repositories contains currency with a given code", () {
-      when(repository.containsCurrencyOf(code)).thenReturn(true);
-      when(anotherRepository.containsCurrencyOf(code)).thenReturn(false);
-      expect(aggregate.containsCurrencyOf(code), isTrue);
-
-      when(repository.containsCurrencyOf(code)).thenReturn(false);
-      when(anotherRepository.containsCurrencyOf(code)).thenReturn(true);
-      expect(aggregate.containsCurrencyOf(code), isTrue);
-
-      when(repository.containsCurrencyOf(code)).thenReturn(false);
-      when(anotherRepository.containsCurrencyOf(code)).thenReturn(false);
-      expect(aggregate.containsCurrencyOf(code), isFalse);
-    });
-  });
 }

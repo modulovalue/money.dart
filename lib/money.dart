@@ -25,3 +25,6 @@ library money;
 export "src/currency.dart";
 export "src/currency_repository.dart";
 export "src/money.dart";
+export 'src/money_transformer.dart';
+export 'src/exchange_rate.dart';
+export 'src/exchange_rate_repository.dart';

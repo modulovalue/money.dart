@@ -20,37 +20,37 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import "package:test/test.dart";
 import "package:money/money.dart";
+import "package:test/test.dart";
 
 final currency = new CodeCurrency(code: "USD");
 final anotherCurrency = new CodeCurrency(code: "EUR");
 
 void main() {
-  group("Currency", () {
-    test("has a code", () {
-      expect(currency.code, same("USD"));
-    });
+    group("Currency", () {
+        test("has a code", () {
+            expect(currency.code, same("USD"));
+        });
 
-    test("throws an error when code is NULL during instantiation", () {
-      expect(() => new CodeCurrency(code: null), throwsArgumentError);
-    });
+        test("throws an error when code is NULL during instantiation", () {
+            expect(() => new CodeCurrency(code: null), throwsArgumentError);
+        });
 
-    test("throws an error when code is empty during instantiation", () {
-      expect(() => new CodeCurrency(code: ""), throwsArgumentError);
-      expect(() => new CodeCurrency(code: "  "), throwsArgumentError);
-    });
+        test("throws an error when code is empty during instantiation", () {
+            expect(() => new CodeCurrency(code: ""), throwsArgumentError);
+            expect(() => new CodeCurrency(code: "  "), throwsArgumentError);
+        });
 
-    test("equals to another currency", () {
-      expect(currency == currency, isTrue);
-      expect(currency == anotherCurrency, isFalse);
-      expect(currency == "not a currency", isFalse);
-    });
+        test("equals to another currency", () {
+            expect(currency == currency, isTrue);
+            expect(currency == anotherCurrency, isFalse);
+            expect(currency == "not a currency", isFalse);
+        });
 
-    test("has a hashcode", () {
-      expect(currency.hashCode, const isInstanceOf<int>());
-      expect(currency.hashCode, equals(new CodeCurrency(code: "USD").hashCode));
-      expect(currency.hashCode, isNot(equals(new CodeCurrency(code: "EUR").hashCode)));
+        test("has a hashcode", () {
+            expect(currency.hashCode, const isInstanceOf<int>());
+            expect(currency.hashCode, equals(new CodeCurrency(code: "USD").hashCode));
+            expect(currency.hashCode, isNot(equals(new CodeCurrency(code: "EUR").hashCode)));
+        });
     });
-  });
 }

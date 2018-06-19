@@ -20,28 +20,27 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import "package:test/test.dart";
-
 import "package:money/money.dart" show UnknownCurrencyException;
+import "package:test/test.dart";
 
 const code = "USD";
 const message = "Some message";
 
 void main() {
-  group("UnknownCurrencyException", () {
-    test("is an exception", () {
-      final exception = new UnknownCurrencyException(code);
-      expect(exception, const isInstanceOf<Exception>());
-    });
+    group("UnknownCurrencyException", () {
+        test("is an exception", () {
+            final exception = new UnknownCurrencyException(code);
+            expect(exception, const isInstanceOf<Exception>());
+        });
 
-    test("has a code of an unknown currency", () {
-      final exception = new UnknownCurrencyException(code);
-      expect(exception.unknownCurrencyCode, equals(code));
-    });
+        test("has a code of an unknown currency", () {
+            final exception = new UnknownCurrencyException(code);
+            expect(exception.unknownCurrencyCode, equals(code));
+        });
 
-    test("can be converted to string", () {
-      final exception = new UnknownCurrencyException(code);
-      expect(exception.toString(), equals('UnknownCurrencyException: Unknown currency "$code".'));
+        test("can be converted to string", () {
+            final exception = new UnknownCurrencyException(code);
+            expect(exception.toString(), equals('UnknownCurrencyException: Unknown currency "$code".'));
+        });
     });
-  });
 }

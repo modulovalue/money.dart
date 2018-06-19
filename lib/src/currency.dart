@@ -20,6 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+import 'package:collection/collection.dart';
 import 'package:meta/meta.dart';
 
 /// Currency Value Object.
@@ -34,17 +35,23 @@ abstract class Currency {
 
     @override
     bool operator ==(Object other) {
-        return other is Currency && other.code == code;
+        return other is Currency
+            && other.code == code
+            && this.runtimeType.toString() == other.runtimeType.toString();
     }
 
     @override
     int get hashCode {
         return 17 * 37 + code.hashCode;
     }
+
+    String toDebugString({bool showPreferredExponent = false}) {
+        return code + ((showPreferredExponent) ? ("^${preferredExponent}") : "");
+    }
 }
 
 
-class CodeCurrency implements Currency {
+class CodeCurrency extends Currency {
 
     @override
     final String code;
@@ -81,10 +88,11 @@ class CodeCurrency implements Currency {
     }
 }
 
-class IAINCurrency implements Currency {
+class IAINCurrency extends Currency {
 
     final String type;
     final int id;
+    final List<String> additional;
 
     @override
     final int preferredExponent;
@@ -93,7 +101,7 @@ class IAINCurrency implements Currency {
         @required this.type,
         @required this.id,
         @required this.preferredExponent,
-
+        this.additional,
     }) {
         if (type == null) {
             throw new ArgumentError.notNull("type");
@@ -119,12 +127,20 @@ class IAINCurrency implements Currency {
         }
     }
 
+    String additionalInfoString() {
+        if (additional == null) {
+            return "";
+        } else {
+            return additional.join(",");
+        }
+    }
+
     @override
-    String get code => "$type$id";
+    String get code => "$type$id" + additionalInfoString();
 
     @override
     bool operator ==(Object other) {
-        return other is Currency && other.code == code;
+        return other is IAINCurrency && other.code == code && ListEquality().equals(other.additional, this.additional);
     }
 
     @override

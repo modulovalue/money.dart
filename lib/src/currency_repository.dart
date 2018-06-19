@@ -26,30 +26,30 @@ import 'package:money/money.dart';
 ///
 /// Implement this interface to provide set of currencies to your application.
 abstract class CurrencyRepository {
-  /// Returns a currency with a specified [code].
-  ///
-  /// Throws a [UnknownCurrencyException] if this repository does not
-  /// contain a currency with a specified code.
-  Currency currencyOf(String code);
+    /// Returns a currency with a specified [code].
+    ///
+    /// Throws a [UnknownCurrencyException] if this repository does not
+    /// contain a currency with a specified code.
+    Currency currencyOf(String code);
 
-  /// Returns list with all currencies from this repository.
-  List<Currency> allCurrencies();
+    /// Returns list with all currencies from this repository.
+    List<Currency> allCurrencies();
 
-  /// Checks whether a [currency] is available in this repository.
-  bool containsCurrency(Currency currency);
+    /// Checks whether a [currency] is available in this repository.
+    bool containsCurrency(Currency currency);
 
-  /// Checks whether a currency with [code] is available in this repository.
-  bool containsCurrencyOf(String code);
+    /// Checks whether a currency with [code] is available in this repository.
+    bool containsCurrencyOf(String code);
 }
 
 class UnknownCurrencyException implements Exception {
-  final String unknownCurrencyCode;
+    final String unknownCurrencyCode;
 
-  UnknownCurrencyException(this.unknownCurrencyCode);
+    UnknownCurrencyException(this.unknownCurrencyCode);
 
-  @override
-  String toString() =>
-      'UnknownCurrencyException: Unknown currency "$unknownCurrencyCode".';
+    @override
+    String toString() =>
+        'UnknownCurrencyException: Unknown currency "$unknownCurrencyCode".';
 }
 
 /// Base class for implementing [CurrencyRepository].
@@ -57,74 +57,76 @@ class UnknownCurrencyException implements Exception {
 /// This class implements all methods of [CurrencyRepository]
 /// except of [allCurrencies].
 abstract class CurrencyRepositoryBase implements CurrencyRepository {
-  @override
-  Currency currencyOf(String code) {
-    return allCurrencies().firstWhere((c) => c.code == code,
-        orElse: () => throw new UnknownCurrencyException(code));
-  }
+    @override
+    Currency currencyOf(String code) {
+        return allCurrencies().firstWhere((c) => c.code == code,
+            orElse: () => throw new UnknownCurrencyException(code));
+    }
 
-  @override
-  bool containsCurrencyOf(String code) {
-    return allCurrencies().where((c) => c.code == code).isNotEmpty;
-  }
+    @override
+    bool containsCurrencyOf(String code) {
+        return allCurrencies()
+            .where((c) => c.code == code)
+            .isNotEmpty;
+    }
 
-  @override
-  bool containsCurrency(Currency currency) {
-    return allCurrencies().contains(currency);
-  }
+    @override
+    bool containsCurrency(Currency currency) {
+        return allCurrencies().contains(currency);
+    }
 }
 
 /// Aggregates several currency repositories.
 class AggregateCurrencyRepository implements CurrencyRepository {
-  final List<CurrencyRepository> _repositories;
+    final List<CurrencyRepository> _repositories;
 
-  AggregateCurrencyRepository(Iterable<CurrencyRepository> repositories)
-      : _repositories = repositories.toList(growable: false) {
-    if (_repositories.isEmpty) {
-      throw new ArgumentError("List of repositories cannot be empty.");
-    }
-  }
-
-  @override
-  Currency currencyOf(String code) {
-    for (final repository in _repositories) {
-      if (repository.containsCurrencyOf(code)) {
-        return repository.currencyOf(code);
-      }
+    AggregateCurrencyRepository(Iterable<CurrencyRepository> repositories)
+        : _repositories = repositories.toList(growable: false) {
+        if (_repositories.isEmpty) {
+            throw new ArgumentError("List of repositories cannot be empty.");
+        }
     }
 
-    throw new UnknownCurrencyException(code);
-  }
+    @override
+    Currency currencyOf(String code) {
+        for (final repository in _repositories) {
+            if (repository.containsCurrencyOf(code)) {
+                return repository.currencyOf(code);
+            }
+        }
 
-  @override
-  bool containsCurrencyOf(String code) {
-    for (final repository in _repositories) {
-      if (repository.containsCurrencyOf(code)) {
-        return true;
-      }
+        throw new UnknownCurrencyException(code);
     }
 
-    return false;
-  }
+    @override
+    bool containsCurrencyOf(String code) {
+        for (final repository in _repositories) {
+            if (repository.containsCurrencyOf(code)) {
+                return true;
+            }
+        }
 
-  @override
-  bool containsCurrency(Currency currency) {
-    for (final repository in _repositories) {
-      if (repository.containsCurrency(currency)) {
-        return true;
-      }
+        return false;
     }
 
-    return false;
-  }
+    @override
+    bool containsCurrency(Currency currency) {
+        for (final repository in _repositories) {
+            if (repository.containsCurrency(currency)) {
+                return true;
+            }
+        }
 
-  @override
-  List<Currency> allCurrencies() {
-    final result = <Currency>[];
-    for (final repository in _repositories) {
-      result.addAll(repository.allCurrencies());
+        return false;
     }
 
-    return result.toList(growable: false);
-  }
+    @override
+    List<Currency> allCurrencies() {
+        final result = <Currency>[];
+        for (final repository in _repositories) {
+            result.addAll(repository.allCurrencies());
+        }
+
+        return result.toList(growable: false);
+    }
 }

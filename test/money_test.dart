@@ -21,7 +21,7 @@
 // THE SOFTWARE.
 
 import 'package:decimal/decimal.dart';
-import "package:money/money.dart" ;
+import "package:money/money.dart";
 import "package:test/test.dart";
 
 final amount = 10;
@@ -131,7 +131,8 @@ void main() {
         });
 
         test("adds anoher money", () {
-            final result = new Money(new Decimal.fromInt(amount), currency) + new Money(new Decimal.fromInt(anotherAmount), currency);
+            final result = new Money(new Decimal.fromInt(amount), currency) +
+                new Money(new Decimal.fromInt(anotherAmount), currency);
             expect(result, const isInstanceOf<Money>());
             expect(result.amount.toString(), equals((amount + anotherAmount).toString()));
             expect(result.currency.toString(), equals(currency.toString()));
@@ -182,7 +183,8 @@ void main() {
             expect(one * Decimal.parse("-3"), equals(new Money(new Decimal.fromInt(-3), currency)));
             expect(one * Decimal.parse("-2"), equals(new Money(new Decimal.fromInt(-2), currency)));
             expect(one * Decimal.parse("-2"), equals(new Money(new Decimal.fromInt(-2), currency)));
-            expect(one * Decimal.parse("-8328.578947368"), equals(new Money(Decimal.parse("-8328.578947368"), currency)));
+            expect(
+                one * Decimal.parse("-8328.578947368"), equals(new Money(Decimal.parse("-8328.578947368"), currency)));
             expect(one * Decimal.parse("-8328.5"), equals(new Money(Decimal.parse("-8328.5"), currency)));
         });
 
@@ -224,30 +226,65 @@ void main() {
         });
 
         test("allocates amount by ratio", () {
-            expect(new Money(new Decimal.fromInt(0), currency).allocate([new Decimal.fromInt(1), new Decimal.fromInt(1)]),
-                equals(<Money>[new Money(new Decimal.fromInt(0), currency), new Money(new Decimal.fromInt(0), currency)]));
-            expect(new Money(new Decimal.fromInt(1), currency).allocate([new Decimal.fromInt(1), new Decimal.fromInt(1)]),
-                equals(<Money>[new Money(new Decimal.fromInt(1), currency), new Money(new Decimal.fromInt(0), currency)]));
-            expect(new Money(new Decimal.fromInt(2), currency).allocate([new Decimal.fromInt(1), new Decimal.fromInt(1)]),
-                equals(<Money>[new Money(new Decimal.fromInt(1), currency), new Money(new Decimal.fromInt(1), currency)]));
-            expect(new Money(new Decimal.fromInt(2), currency).allocate([new Decimal.fromInt(1), new Decimal.fromInt(0)]),
-                equals(<Money>[new Money(new Decimal.fromInt(2), currency), new Money(new Decimal.fromInt(0), currency)]));
-            expect(new Money(new Decimal.fromInt(2), currency).allocate([new Decimal.fromInt(0), new Decimal.fromInt(1)]),
-                equals(<Money>[new Money(new Decimal.fromInt(0), currency), new Money(new Decimal.fromInt(2), currency)]));
-            expect(new Money(new Decimal.fromInt(100), currency).allocate([new Decimal.fromInt(1), new Decimal.fromInt(1), new Decimal.fromInt(1)]),
-                equals(<Money>[new Money(new Decimal.fromInt(34), currency), new Money(new Decimal.fromInt(33), currency), new Money(new Decimal.fromInt(33), currency)]));
-            expect(new Money(new Decimal.fromInt(101), currency).allocate([new Decimal.fromInt(1), new Decimal.fromInt(1), new Decimal.fromInt(1)]),
-                equals(<Money>[new Money(new Decimal.fromInt(34), currency), new Money(new Decimal.fromInt(34), currency), new Money(new Decimal.fromInt(33), currency)]));
-            expect(new Money(new Decimal.fromInt(101), currency).allocate([new Decimal.fromInt(3), new Decimal.fromInt(7)]),
-                equals(<Money>[new Money(new Decimal.fromInt(31), currency), new Money(new Decimal.fromInt(70), currency)]));
-            expect(new Money(new Decimal.fromInt(101), currency).allocate([new Decimal.fromInt(7), new Decimal.fromInt(3)]),
-                equals(<Money>[new Money(new Decimal.fromInt(71), currency), new Money(new Decimal.fromInt(30), currency)]));
-            expect(new Money(new Decimal.fromInt(-101), currency).allocate([new Decimal.fromInt(1), new Decimal.fromInt(1)]),
-                equals(<Money>[new Money(new Decimal.fromInt(-50), currency), new Money(new Decimal.fromInt(-51), currency)]));
-            expect(new Money(new Decimal.fromInt(-101), currency).allocate([new Decimal.fromInt(7), new Decimal.fromInt(3)]),
-                equals(<Money>[new Money(new Decimal.fromInt(-70), currency), new Money(new Decimal.fromInt(-31), currency)]));
-            expect(new Money(new Decimal.fromInt(-101), currency).allocate([new Decimal.fromInt(3), new Decimal.fromInt(7)]),
-                equals(<Money>[new Money(new Decimal.fromInt(-30), currency), new Money(new Decimal.fromInt(-71), currency)]));
+            expect(
+                new Money(new Decimal.fromInt(0), currency).allocate([new Decimal.fromInt(1), new Decimal.fromInt(1)]),
+                equals(
+                    <Money>[new Money(new Decimal.fromInt(0), currency), new Money(new Decimal.fromInt(0), currency)]));
+            expect(
+                new Money(new Decimal.fromInt(1), currency).allocate([new Decimal.fromInt(1), new Decimal.fromInt(1)]),
+                equals(
+                    <Money>[new Money(new Decimal.fromInt(1), currency), new Money(new Decimal.fromInt(0), currency)]));
+            expect(
+                new Money(new Decimal.fromInt(2), currency).allocate([new Decimal.fromInt(1), new Decimal.fromInt(1)]),
+                equals(
+                    <Money>[new Money(new Decimal.fromInt(1), currency), new Money(new Decimal.fromInt(1), currency)]));
+            expect(
+                new Money(new Decimal.fromInt(2), currency).allocate([new Decimal.fromInt(1), new Decimal.fromInt(0)]),
+                equals(
+                    <Money>[new Money(new Decimal.fromInt(2), currency), new Money(new Decimal.fromInt(0), currency)]));
+            expect(
+                new Money(new Decimal.fromInt(2), currency).allocate([new Decimal.fromInt(0), new Decimal.fromInt(1)]),
+                equals(
+                    <Money>[new Money(new Decimal.fromInt(0), currency), new Money(new Decimal.fromInt(2), currency)]));
+            expect(new Money(new Decimal.fromInt(100), currency).allocate(
+                [new Decimal.fromInt(1), new Decimal.fromInt(1), new Decimal.fromInt(1)]),
+                equals(<Money>[
+                    new Money(new Decimal.fromInt(34), currency),
+                    new Money(new Decimal.fromInt(33), currency),
+                    new Money(new Decimal.fromInt(33), currency)
+                ]));
+            expect(new Money(new Decimal.fromInt(101), currency).allocate(
+                [new Decimal.fromInt(1), new Decimal.fromInt(1), new Decimal.fromInt(1)]),
+                equals(<Money>[
+                    new Money(new Decimal.fromInt(34), currency),
+                    new Money(new Decimal.fromInt(34), currency),
+                    new Money(new Decimal.fromInt(33), currency)
+                ]));
+            expect(new Money(new Decimal.fromInt(101), currency).allocate(
+                [new Decimal.fromInt(3), new Decimal.fromInt(7)]),
+                equals(
+                    <Money>[new Money(new Decimal.fromInt(31), currency), new Money(new Decimal.fromInt(70), currency)
+                    ]));
+            expect(new Money(new Decimal.fromInt(101), currency).allocate(
+                [new Decimal.fromInt(7), new Decimal.fromInt(3)]),
+                equals(
+                    <Money>[new Money(new Decimal.fromInt(71), currency), new Money(new Decimal.fromInt(30), currency)
+                    ]));
+            expect(new Money(new Decimal.fromInt(-101), currency).allocate(
+                [new Decimal.fromInt(1), new Decimal.fromInt(1)]),
+                equals(
+                    <Money>[new Money(new Decimal.fromInt(-50), currency), new Money(new Decimal.fromInt(-51), currency)
+                    ]));
+            expect(new Money(new Decimal.fromInt(-101), currency).allocate(
+                [new Decimal.fromInt(7), new Decimal.fromInt(3)]),
+                equals(
+                    <Money>[new Money(new Decimal.fromInt(-70), currency), new Money(new Decimal.fromInt(-31), currency)
+                    ]));
+            expect(new Money(new Decimal.fromInt(-101), currency).allocate(
+                [new Decimal.fromInt(3), new Decimal.fromInt(7)]),
+                equals(
+                    <Money>[new Money(new Decimal.fromInt(-30), currency), new Money(new Decimal.fromInt(-71), currency)
+                    ]));
         });
 
         test("throws an error when ratio is null during allocation", () {
@@ -274,11 +311,17 @@ void main() {
             expect(new Money(new Decimal.fromInt(15), currency).allocateTo(1),
                 equals(<Money>[new Money(new Decimal.fromInt(15), currency)]));
             expect(new Money(new Decimal.fromInt(15), currency).allocateTo(2),
-                equals(<Money>[new Money(new Decimal.fromInt(8), currency), new Money(new Decimal.fromInt(7), currency)]));
+                equals(
+                    <Money>[new Money(new Decimal.fromInt(8), currency), new Money(new Decimal.fromInt(7), currency)]));
             expect(new Money(new Decimal.fromInt(10), currency).allocateTo(2),
-                equals(<Money>[new Money(new Decimal.fromInt(5), currency), new Money(new Decimal.fromInt(5), currency)]));
+                equals(
+                    <Money>[new Money(new Decimal.fromInt(5), currency), new Money(new Decimal.fromInt(5), currency)]));
             expect(new Money(new Decimal.fromInt(10), currency).allocateTo(3),
-                equals(<Money>[new Money(new Decimal.fromInt(4), currency), new Money(new Decimal.fromInt(3), currency), new Money(new Decimal.fromInt(3), currency)]));
+                equals(<Money>[
+                    new Money(new Decimal.fromInt(4), currency),
+                    new Money(new Decimal.fromInt(3), currency),
+                    new Money(new Decimal.fromInt(3), currency)
+                ]));
         });
 
         test("throws an error when N is null during allocation to the N targets", () {
