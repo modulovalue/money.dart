@@ -20,32 +20,116 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+import 'package:meta/meta.dart';
+
 /// Currency Value Object.
 ///
 /// Holds Currency specific data.
-class Currency {
-  /// This currency code.
-  final String code;
+abstract class Currency {
+    /// This currency code.
 
-  /// Constructor.
-  ///
-  /// Argument [code] is required, it must not be null or empty.
-  Currency(this.code) {
-    if (code == null) {
-      throw new ArgumentError.notNull("code");
+    String get code;
+
+    int get preferredExponent;
+
+    @override
+    bool operator ==(Object other) {
+        return other is Currency && other.code == code;
     }
-    if (code.trim().isEmpty) {
-      throw new ArgumentError.value(code, "code", "Cannot be empty");
+
+    @override
+    int get hashCode {
+        return 17 * 37 + code.hashCode;
     }
-  }
+}
 
-  @override
-  bool operator ==(Object other) {
-    return other is Currency && other.code == code;
-  }
 
-  @override
-  int get hashCode {
-    return 17 * 37 + code.hashCode;
-  }
+class CodeCurrency implements Currency {
+
+    @override
+    final String code;
+
+    @override
+    final int preferredExponent;
+
+    CodeCurrency({@required this.code, this.preferredExponent = 2}) {
+        if (code == null) {
+            throw new ArgumentError.notNull("code");
+        }
+        if (code
+            .trim()
+            .isEmpty) {
+            throw new ArgumentError.value(code, "code", "Cannot be empty");
+        }
+
+        if (preferredExponent == null) {
+            throw new ArgumentError.notNull("preferredExponent");
+        }
+        if (preferredExponent < 0) {
+            throw new ArgumentError.value(preferredExponent, "preferredExponent", "Cannot be negative");
+        }
+    }
+
+    @override
+    bool operator ==(Object other) {
+        return other is Currency && other.code == code;
+    }
+
+    @override
+    int get hashCode {
+        return 17 * 37 + code.hashCode;
+    }
+}
+
+class IAINCurrency implements Currency {
+
+    final String type;
+    final int id;
+
+    @override
+    final int preferredExponent;
+
+    IAINCurrency({
+        @required this.type,
+        @required this.id,
+        @required this.preferredExponent,
+
+    }) {
+        if (type == null) {
+            throw new ArgumentError.notNull("type");
+        }
+        if (type
+            .trim()
+            .isEmpty) {
+            throw new ArgumentError.value(type, "type", "Cannot be empty");
+        }
+
+        if (id == null) {
+            throw new ArgumentError.notNull("id");
+        }
+        if (id.isNegative) {
+            throw new ArgumentError.value(id, "id", "id cannot be negative");
+        }
+
+        if (preferredExponent == null) {
+            throw new ArgumentError.notNull("preferredExponent");
+        }
+        if (preferredExponent < 0) {
+            throw new ArgumentError.value(preferredExponent, "preferredExponent", "Cannot be negative");
+        }
+    }
+
+    @override
+    String get code => "$type$id";
+
+    @override
+    bool operator ==(Object other) {
+        return other is Currency && other.code == code;
+    }
+
+    @override
+    int get hashCode {
+        /// TODO
+        return super.hashCode;
+    }
 }

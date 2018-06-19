@@ -21,10 +21,10 @@
 // THE SOFTWARE.
 
 import "package:test/test.dart";
-import "package:money/money.dart" show Currency;
+import "package:money/money.dart";
 
-final currency = new Currency("USD");
-final anotherCurrency = new Currency("EUR");
+final currency = new CodeCurrency(code: "USD");
+final anotherCurrency = new CodeCurrency(code: "EUR");
 
 void main() {
   group("Currency", () {
@@ -33,12 +33,12 @@ void main() {
     });
 
     test("throws an error when code is NULL during instantiation", () {
-      expect(() => new Currency(null), throwsArgumentError);
+      expect(() => new CodeCurrency(code: null), throwsArgumentError);
     });
 
     test("throws an error when code is empty during instantiation", () {
-      expect(() => new Currency(""), throwsArgumentError);
-      expect(() => new Currency("  "), throwsArgumentError);
+      expect(() => new CodeCurrency(code: ""), throwsArgumentError);
+      expect(() => new CodeCurrency(code: "  "), throwsArgumentError);
     });
 
     test("equals to another currency", () {
@@ -49,8 +49,8 @@ void main() {
 
     test("has a hashcode", () {
       expect(currency.hashCode, const isInstanceOf<int>());
-      expect(currency.hashCode, equals(new Currency("USD").hashCode));
-      expect(currency.hashCode, isNot(equals(new Currency("EUR").hashCode)));
+      expect(currency.hashCode, equals(new CodeCurrency(code: "USD").hashCode));
+      expect(currency.hashCode, isNot(equals(new CodeCurrency(code: "EUR").hashCode)));
     });
   });
 }

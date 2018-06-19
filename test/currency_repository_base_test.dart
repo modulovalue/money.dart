@@ -23,16 +23,16 @@
 import "package:test/test.dart";
 
 import "package:money/money.dart"
-    show CurrencyRepository, CurrencyRepositoryBase, Currency, UnknownCurrencyException;
+    show CodeCurrency, Currency, CurrencyRepository, CurrencyRepositoryBase, UnknownCurrencyException;
 
 final code = "USD";
 final anotherCode = "RUB";
 
-final currency = new Currency(code);
-final anotherCurrency = new Currency(anotherCode);
+final currency = new CodeCurrency(code: code);
+final anotherCurrency = new CodeCurrency(code: anotherCode);
 
 final notInRepoCode = "EUR";
-final notInRepoCurrency = new Currency("EUR");
+final notInRepoCurrency = new CodeCurrency(code: "EUR");
 
 class TestCurrencyRepository extends CurrencyRepositoryBase {
   @override

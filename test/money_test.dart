@@ -21,13 +21,13 @@
 // THE SOFTWARE.
 
 import 'package:decimal/decimal.dart';
-import "package:money/money.dart" show Money, Currency;
+import "package:money/money.dart" ;
 import "package:test/test.dart";
 
 final amount = 10;
 final anotherAmount = 5;
-final currency = new Currency("USD");
-final anotherCurrency = new Currency("EUR");
+final currency = new CodeCurrency(code: "USD");
+final anotherCurrency = new CodeCurrency(code: "EUR");
 final money = new Money(new Decimal.fromInt(amount), currency);
 
 void main() {

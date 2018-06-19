@@ -25,15 +25,15 @@ import "package:mockito/mockito.dart";
 import "package:test/test.dart";
 
 import "package:money/money.dart"
-    show AggregateCurrencyRepository, CurrencyRepository, Currency, UnknownCurrencyException;
+    show AggregateCurrencyRepository, CodeCurrency, Currency, CurrencyRepository, UnknownCurrencyException;
 
 class MockCurrencyRepository extends Mock implements CurrencyRepository {}
 
 const code = "USD";
 const anotherCode = "EUR";
 
-final currency = new Currency(code);
-final anotherCurrency = new Currency(anotherCode);
+final currency = new CodeCurrency(code: code);
+final anotherCurrency = new CodeCurrency(code: anotherCode);
 
 void main() {
   group("AggregateCurrencyRepository", () {

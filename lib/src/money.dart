@@ -174,9 +174,6 @@ class Money implements Comparable<Money> {
     /// Creates new [Money] instance with same [Currency].
     Money _withAmount(Decimal amount) => new Money(amount, currency);
 
-    int _round(num number) {
-        return number.round();
-    }
 
     Decimal _calculateRatiosTotal(List<Decimal> ratios) {
         var total = Decimal.parse("0.0");
